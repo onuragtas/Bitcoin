@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/notificationbg"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/btc1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="bitcoin"/>
+
+    <TextView
+        android:id="@+id/btc2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="bitcoin"/>
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="date"/>
+</LinearLayout>
