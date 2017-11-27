@@ -40,7 +40,7 @@ public class MyService extends Service implements GeneralCallbacks {
                 api.get("https://www.paribu.com/ticker", new HashMap<String, String>(), MyService.this);
             }
 
-        }, 0, 1000*60);
+        }, 0, 1000*30);
     }
 
     @Override
@@ -99,9 +99,9 @@ public class MyService extends Service implements GeneralCallbacks {
 
         String timeStamp = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
         if(last<session.getAlarm()){
-            bigViews.setTextViewText(R.id.btc1, "1 BTC: "+last+" TL , Alarm: "+session.getAlarm());
+            bigViews.setTextViewText(R.id.btc1, last+" TL, Alarm: "+session.getAlarm());
         }else{
-            bigViews.setTextViewText(R.id.btc1, "1 BTC: "+last+" TL");
+            bigViews.setTextViewText(R.id.btc1, last+" TL, Kar: "+(last*session.getBtc()-session.getStart())+" TL");
         }
 
         bigViews.setTextViewText(R.id.btc2, session.getBtc()+" BTC: "+session.getBtc()*last+" TL");

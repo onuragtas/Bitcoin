@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="10dp"
     tools:context="org.resoft.bitcoin.MainActivity">
 
     <LinearLayout
@@ -43,6 +44,26 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Alarm" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:inputType="numberDecimal"
+            android:id="@+id/startprice"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+
+        <Button
+            android:id="@+id/savestart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Save" />
     </LinearLayout>
 
     <TextView

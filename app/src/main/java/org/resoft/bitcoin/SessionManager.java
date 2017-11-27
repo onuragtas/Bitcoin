@@ -40,9 +40,17 @@ public class SessionManager {
         return preferences.getFloat("alarm", 0);
     }
 
+    public void setStart(float tl){
+        editor.putFloat("start", tl).commit();
+    }
+    public float getStart(){
+        return preferences.getFloat("start", 0);
+    }
+
     public void destroy(){
         editor.putFloat("btc", 0);
-        editor.putInt("alarm", 0);
+        editor.putFloat("alarm", 0);
+        editor.putFloat("start", 0);
         editor.clear();
         editor.commit();
     }

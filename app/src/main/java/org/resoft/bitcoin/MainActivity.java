@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements GeneralCallbacks 
     };
     private Intent playIntent;
     private EditText alarmedittext;
+    private EditText startprice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +64,13 @@ public class MainActivity extends AppCompatActivity implements GeneralCallbacks 
         alarmedittext = (EditText) findViewById(R.id.editalarm);
         Button savealarm = (Button) findViewById(R.id.alarmbuton);
 
+        startprice = (EditText) findViewById(R.id.startprice);
+        Button savestart = (Button) findViewById(R.id.savestart);
+
 
         edittext.setText(session.getBtc()+"");
         alarmedittext.setText(session.getAlarm()+"");
+        startprice.setText(session.getStart()+"");
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +84,13 @@ public class MainActivity extends AppCompatActivity implements GeneralCallbacks 
             @Override
             public void onClick(View view) {
                 session.setAlarm(Float.parseFloat(alarmedittext.getText().toString()));
+            }
+        });
+
+        savestart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                session.setStart(Float.parseFloat(startprice.getText().toString()));
             }
         });
 
