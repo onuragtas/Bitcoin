@@ -1,9 +1,14 @@
 package org.resoft.bitcoin;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
@@ -100,6 +105,9 @@ public class MyService extends Service implements GeneralCallbacks {
         String timeStamp = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
         if(last<session.getAlarm()){
             bigViews.setTextViewText(R.id.btc1, last+" TL, Alarm: "+session.getAlarm());
+
+            alert();
+
         }else{
             bigViews.setTextViewText(R.id.btc1, last+" TL, Kar: "+(last*session.getBtc()-session.getStart())+" TL");
         }
@@ -121,6 +129,21 @@ public class MyService extends Service implements GeneralCallbacks {
             startForeground(Constants.NOTIFICATION_ID.FOREGROUND_SERVICE, status);
         }
 
+    }
+
+    private void alert() {
+        for (int i = 0; i<3; i++){
+            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+            r.play();
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     @Override
