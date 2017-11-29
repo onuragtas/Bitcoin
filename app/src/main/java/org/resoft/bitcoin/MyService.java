@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -30,12 +32,13 @@ public class MyService extends Service implements GeneralCallbacks {
     private Notification status;
     private Api api;
     private SessionManager session;
-    private double last;
+    private double last,prev = 0;
     private Timer timer;
-
+    MediaPlayer m = new MediaPlayer();
 
     public void onCreate(){
         super.onCreate();
+        initPlay();
         session = new SessionManager(getApplicationContext());
         api = new Api(getApplicationContext());
         timer = new Timer();
@@ -103,17 +106,24 @@ public class MyService extends Service implements GeneralCallbacks {
                 notificationIntent, 0);
 
         String timeStamp = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
+
         if(last<session.getAlarm()){
             bigViews.setTextViewText(R.id.btc1, last+" TL, Alarm: "+session.getAlarm());
-
-            alert();
-
         }else{
             bigViews.setTextViewText(R.id.btc1, last+" TL, Kar: "+(last*session.getBtc()-session.getStart())+" TL");
         }
 
         bigViews.setTextViewText(R.id.btc2, session.getBtc()+" BTC: "+session.getBtc()*last+" TL");
         bigViews.setTextViewText(R.id.date, timeStamp);
+
+        System.out.println(prev+"-"+last);
+
+        if(last > prev){
+            beep2();
+        }else{
+            beep();
+        }
+        prev = last;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             status = new Notification.Builder(getApplicationContext()).build();
@@ -131,9 +141,45 @@ public class MyService extends Service implements GeneralCallbacks {
 
     }
 
-    private void alert() {
-        for (int i = 0; i<3; i++){
-            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+    public void initPlay(){
+        try{
+            AssetFileDescriptor descriptor = getAssets().openFd("beep.mp3");
+            m.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
+            descriptor.close();
+
+            m.prepare();
+            m.setVolume(1f, 1f);
+            m.setLooping(true);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void beep() {
+        try {
+            if(!m.isPlaying()) {
+                m.start();
+            }
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(m.isPlaying()) {
+                m.pause();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void beep2(){
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        for (int i = 0; i<2; i++){
+
             Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
             r.play();
 
