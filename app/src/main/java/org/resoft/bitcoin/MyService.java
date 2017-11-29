@@ -117,9 +117,9 @@ public class MyService extends Service implements GeneralCallbacks {
         bigViews.setTextViewText(R.id.btc2, session.getBtc()+" BTC: "+session.getBtc()*last+" TL");
         bigViews.setTextViewText(R.id.date, timeStamp);
 
-        if(last >= prev){
+        if(last > prev){
             beep2();
-        }else{
+        }else if(last < prev){
             beep();
         }
         prev = last;
