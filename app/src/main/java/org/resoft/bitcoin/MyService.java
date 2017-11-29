@@ -116,8 +116,6 @@ public class MyService extends Service implements GeneralCallbacks {
         bigViews.setTextViewText(R.id.btc2, session.getBtc()+" BTC: "+session.getBtc()*last+" TL");
         bigViews.setTextViewText(R.id.date, timeStamp);
 
-        System.out.println(prev+"-"+last);
-
         if(last > prev){
             beep2();
         }else{
