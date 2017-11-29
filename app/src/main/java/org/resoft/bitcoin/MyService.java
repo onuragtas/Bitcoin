@@ -35,6 +35,7 @@ public class MyService extends Service implements GeneralCallbacks {
     private double last,prev = 0;
     private Timer timer;
     MediaPlayer m = new MediaPlayer();
+    MediaPlayer m2 = new MediaPlayer();
 
     public void onCreate(){
         super.onCreate();
@@ -108,15 +109,15 @@ public class MyService extends Service implements GeneralCallbacks {
         String timeStamp = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
 
         if(last<session.getAlarm()){
-            bigViews.setTextViewText(R.id.btc1, last+" TL, Alarm: "+session.getAlarm());
+            bigViews.setTextViewText(R.id.btc1, "P: "+prev+" TL, N: "+last+" TL, Alarm: "+session.getAlarm());
         }else{
-            bigViews.setTextViewText(R.id.btc1, last+" TL, Kar: "+(last*session.getBtc()-session.getStart())+" TL");
+            bigViews.setTextViewText(R.id.btc1, "P: "+prev+" TL, N: "+last+" TL, Kar: "+(last*session.getBtc()-session.getStart())+" TL");
         }
 
         bigViews.setTextViewText(R.id.btc2, session.getBtc()+" BTC: "+session.getBtc()*last+" TL");
         bigViews.setTextViewText(R.id.date, timeStamp);
 
-        if(last > prev){
+        if(last >= prev){
             beep2();
         }else{
             beep();
@@ -149,6 +150,14 @@ public class MyService extends Service implements GeneralCallbacks {
             m.setVolume(1f, 1f);
             m.setLooping(true);
 
+            AssetFileDescriptor descriptor2 = getAssets().openFd("beep2.mp3");
+            m2.setDataSource(descriptor2.getFileDescriptor(), descriptor2.getStartOffset(), descriptor2.getLength());
+            descriptor2.close();
+
+            m2.prepare();
+            m2.setVolume(1f, 1f);
+            m2.setLooping(true);
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -174,19 +183,21 @@ public class MyService extends Service implements GeneralCallbacks {
     }
 
     private void beep2(){
-        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-        for (int i = 0; i<2; i++){
-
-            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
-            r.play();
+        try {
+            if(!m2.isPlaying()) {
+                m2.start();
+            }
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
+            if(m2.isPlaying()) {
+                m2.pause();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
