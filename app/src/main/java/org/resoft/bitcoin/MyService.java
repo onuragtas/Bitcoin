@@ -111,10 +111,10 @@ public class MyService extends Service implements GeneralCallbacks {
         if(last<session.getAlarm()){
             bigViews.setTextViewText(R.id.btc1, "P: "+prev+" TL, N: "+last+" TL, Alarm: "+session.getAlarm());
         }else{
-            bigViews.setTextViewText(R.id.btc1, "P: "+prev+" TL, N: "+last+" TL, Kar: "+(last*session.getBtc()-session.getStart())+" TL");
+            bigViews.setTextViewText(R.id.btc1, "P: "+prev+" TL, N: "+last+" TL, Kar: "+String.format("%.04f",(last*session.getBtc()-session.getStart()))+" TL");
         }
 
-        bigViews.setTextViewText(R.id.btc2, session.getBtc()+" BTC: "+session.getBtc()*last+" TL");
+        bigViews.setTextViewText(R.id.btc2, session.getBtc()+" BTC: "+String.format("%.04f",session.getBtc()*last)+" TL");
         bigViews.setTextViewText(R.id.date, timeStamp);
 
         if(last > prev){
