@@ -36,6 +36,7 @@ public class MyService extends Service implements GeneralCallbacks {
     private Timer timer;
     MediaPlayer m = new MediaPlayer();
     MediaPlayer m2 = new MediaPlayer();
+    private double yuzde;
 
     public void onCreate(){
         super.onCreate();
@@ -114,7 +115,7 @@ public class MyService extends Service implements GeneralCallbacks {
             bigViews.setTextViewText(R.id.btc1, "P: "+prev+" TL, N: "+last+" TL, Kar: "+String.format("%.04f",(last*session.getBtc()-session.getStart()))+" TL");
         }
 
-        bigViews.setTextViewText(R.id.btc2, session.getBtc()+" BTC: "+String.format("%.04f",session.getBtc()*last)+" TL");
+        bigViews.setTextViewText(R.id.btc2, "%"+yuzde+", "+session.getBtc()+" BTC: "+String.format("%.04f",session.getBtc()*last)+" TL");
         bigViews.setTextViewText(R.id.date, timeStamp);
 
         if(last > prev){
@@ -156,7 +157,7 @@ public class MyService extends Service implements GeneralCallbacks {
 
             m2.prepare();
             m2.setVolume(1f, 1f);
-            m2.setLooping(true);
+            m2.setLooping(false);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -189,7 +190,7 @@ public class MyService extends Service implements GeneralCallbacks {
             }
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -204,6 +205,7 @@ public class MyService extends Service implements GeneralCallbacks {
     @Override
     public void VolleyResponse(JSONObject data) throws JSONException {
         last = data.getJSONObject("BTC_TL").getDouble("last");
+        yuzde = data.getJSONObject("BTC_TL").getDouble("percentChange");
         showNotification();
     }
 
