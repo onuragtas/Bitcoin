@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
@@ -12,10 +13,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.resoft.bitcoin.callbacks.GeneralCallbacks;
+import org.resoft.bitcoin.helpers.DBHelper;
+import org.resoft.bitcoin.models.Data;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements GeneralCallbacks {
@@ -46,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements GeneralCallbacks 
     private Intent playIntent;
     private EditText alarmedittext;
     private EditText startprice;
+    private DBHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements GeneralCallbacks 
 
         session = new SessionManager(getApplicationContext());
         api = new Api(getApplicationContext());
-
+        db = new DBHelper(getApplicationContext());
 
         tlview = (TextView) findViewById(R.id.tl);
 
@@ -95,6 +108,22 @@ public class MainActivity extends AppCompatActivity implements GeneralCallbacks 
         });
 
         api.get("https://www.paribu.com/ticker", new HashMap<String, String>(), MainActivity.this);
+
+        LineChart mChart = (LineChart) findViewById(R.id.chart);
+
+        ArrayList<String> xVals = new ArrayList<String>();
+        ArrayList<Entry> yVals = new ArrayList<>();
+
+        ArrayList<Data> datas = db.getData();
+        int i = 0;
+        DecimalFormat decimalFormat = new DecimalFormat("#");
+        for (Data data : datas) {
+
+            // turn your data into Entry objects
+            xVals.add(data.getDate());
+            yVals.add(new Entry((float)data.getData(),i));
+            i++;
+        }
     }
 
 

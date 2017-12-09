@@ -19,9 +19,11 @@ import android.widget.RemoteViews;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.resoft.bitcoin.callbacks.GeneralCallbacks;
+import org.resoft.bitcoin.helpers.DBHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,11 +39,13 @@ public class MyService extends Service implements GeneralCallbacks {
     MediaPlayer m = new MediaPlayer();
     MediaPlayer m2 = new MediaPlayer();
     private double yuzde;
+    private DBHelper db;
 
     public void onCreate(){
         super.onCreate();
         initPlay();
         session = new SessionManager(getApplicationContext());
+        db = new DBHelper(getApplicationContext());
         api = new Api(getApplicationContext());
         timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -206,6 +210,9 @@ public class MyService extends Service implements GeneralCallbacks {
     public void VolleyResponse(JSONObject data) throws JSONException {
         last = data.getJSONObject("BTC_TL").getDouble("last");
         yuzde = data.getJSONObject("BTC_TL").getDouble("percentChange");
+
+        db.insertBitcoin(last);
+        db.getData();
         showNotification();
     }
 
