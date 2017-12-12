@@ -29,6 +29,6 @@ dependencies {
 
     compile 'org.jsoup:jsoup:1.11.2'
     compile 'com.android.volley:volley:1.0.0'
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
 
 }

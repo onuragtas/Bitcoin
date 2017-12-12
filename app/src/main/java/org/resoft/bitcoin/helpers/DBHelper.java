@@ -5,6 +5,10 @@ package org.resoft.bitcoin.helpers;
  */
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,6 +22,8 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
+import android.widget.Toast;
 
 import org.resoft.bitcoin.models.Data;
 
@@ -29,9 +35,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_DATA = "data";
     public static final String COLUMN_DATE = "date";
+    private final Context mContext;
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME , null, 2);
+        mContext = context;
     }
 
     @Override
@@ -60,16 +68,16 @@ public class DBHelper extends SQLiteOpenHelper {
     public ArrayList<Data> getData(){
         ArrayList<Data> datas = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT date,COUNT(id),AVG(data), strftime('%Y-%m-%d', date) dmy FROM bitcoin GROUP BY dmy ORDER BY date DESC LIMIT 60;",null);
+        Cursor cursor = db.rawQuery("SELECT date,id,data, date dmy FROM bitcoin",null);
         if(cursor.moveToFirst()){
             do{
                 double data = cursor.getDouble(2);
                 Date date = new Date(cursor.getLong(0));
-                String dates = new  SimpleDateFormat("yyyy-MM-dd").format(date);
+                String dates = new  SimpleDateFormat("yyyy-MM-dd HH:mm").format(date);
                 datas.add(new Data(data, dates));
             }while(cursor.moveToNext());
         }
-
         return datas;
     }
+
 }
